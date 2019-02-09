@@ -38,6 +38,11 @@ tod = datetime.date(datetime.today())
 CK = "Consumer Key を入力"
 CS = "Consumer Secret を入力"
 
+def oauth():
+        auth=tweepy.OAuthHandler(CK,CS)
+        redir=auth.get_authorization_url()
+        return redir
+        
 def tweet():
         senten='AtCoder AC count battle!\n'
         for i in range(Usercount):
