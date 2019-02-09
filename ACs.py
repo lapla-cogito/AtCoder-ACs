@@ -7,10 +7,13 @@ import urllib.request
 import time
 import datetime
 from datetime import datetime
+from datetime import timedelta
 import seaborn as sns
 import tweepy
 from bs4 import BeautifulSoup
 from flask import Flask,request,render_template
+from requests_oauthlib import OAuth1Session
+from urllib.parse import parse_qsl
 
 # ユーザーの入力
 Users = input().split()
@@ -31,11 +34,11 @@ tod = datetime.date(datetime.today())
 
 def tweet():
         senten='AtCoder AC count battle!\n'
-        for i in range(len(Usercount)):
+        for i in range(Usercount):
             senten+=Userfortw[i]
-            if i!=range(len(Usercount))-1:
-               senten+='vs.'
-        senten+='#ACbattle'
+            if not i==len(range(Usercount))-1:
+               senten+=' vs.'
+        senten+='\n#ACbattle'
         return senten
         
 #入力されたユーザーが存在するかどうか
@@ -99,20 +102,12 @@ for i in range(len(Users)):
                 if l==0:
                     prevACtime=fixedTime
                  
-                 #直前のACと同じ日か確認、違ったら時刻更新
-                if(fixedTime.year == prevTime.year and fixedTime.month == prevTime.month and fixedTime.day == prevTime.day):
-                    ACs+=1
-                    time.append(fixedTime)
-                    ac.append(ACs)
-                    contests.append(subData["contest_id"])
-                    problems.append(subData["problem_id"]) 
-                else:
-                    ACs+=1
-                    time.append(fixedTime)
-                    ac.append(ACs)
-                    contests.append(subData["contest_id"])
-                    problems.append(subData["problem_id"])
-                    prevTime = fixedTime
+                ACs+=1
+                time.append(fixedTime)
+                ac.append(ACs)
+                contests.append(subData["contest_id"])
+                problems.append(subData["problem_id"])
+                prevTime = fixedTime
                     
         if ACs>highest:
             highest=ACs
@@ -134,4 +129,6 @@ plt.xlabel("Date")
 plt.ylabel("AC counts")
 plt.ylim(0, highest*1.1)
 plt.xticks(rotation=315)
+print(tweet())
 plt.legend()
+plt.savefig('graph.png')
