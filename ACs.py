@@ -20,6 +20,8 @@ Users = input().split()
 Usercount=0
 #ツイート用のユーザーを入れる
 Userfortw=[]
+#ツイートできるタイミングかどうか(グラフの生成が終わっていればTrue)
+readyTotw=False
 
 #グラフの基礎設定
 plt.style.use('default')
@@ -31,6 +33,10 @@ prevACtime=0
 #入力された中で1番解いてる人の問題数
 highest=0
 tod = datetime.date(datetime.today())
+
+#取得後に追記
+CK = "Consumer Key を入力"
+CS = "Consumer Secret を入力"
 
 def tweet():
         senten='AtCoder AC count battle!\n'
@@ -132,3 +138,5 @@ plt.xticks(rotation=315)
 print(tweet())
 plt.legend()
 plt.savefig('graph.png')
+#全ての工程が終了
+readyTotw=True
