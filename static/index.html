@@ -1,0 +1,106 @@
+﻿<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <script src="static/brython.js"></script>
+    <script src="static/brython_stdlib.js"></script>
+    <title>AtCoder ACs</title>
+
+    <style type="text/css">
+        /*CSSをINF年ぶりに書こうとしたので書けてない*/
+        .baloon {
+            position: relative;
+            display: inline-block;
+            margin: 1.5em 0;
+            padding: 7px 10px;
+            min-width: 120px;
+            max-width: 100%;
+            color: #555;
+            font-size: 16px;
+            background: #e0edff;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+            .baloon:before {
+                content: "";
+                position: absolute;
+                top: 100%;
+                left: 50%;
+                margin-left: -15px;
+                border: 15px solid transparent;
+                border-top: 15px solid #e0edff;
+            }
+
+            .baloon p {
+                margin: 0;
+                padding: 0;
+            }
+
+        .center {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body onload="brython()">
+    <script type="text/python" src="static/ACs.py">
+    </script>
+    <div>
+        <h1 class="center">
+            AtCoder ACs
+        </h1>
+    </div>
+    <p><div class="baloon">Source code</div></p>
+    Hosted on
+    <a href="https://github.com/severrabaen/AtCoder-ACs" target="_blank">GitHub</a>
+
+    <div>
+        <label>
+            <i> AtCoderでのIDを入力してください(スペース区切りで複数人指定ができます)</i>
+        </label>
+        <input type="text" id="inputusers" placeholder="ex)severrabaen Bwambocos Kuske" size="50">
+        <button type="submit" size="10" id="run">Send</button>
+    </div>
+
+    <!--ここにグラフを持ってくる-->
+    <div id="result"></div>
+
+    <details>
+        <!--はてブロ入れようかな・・・-->
+        <summary>作者の各種リンク</summary>
+        <p>
+            <a href="https://twitter.com/severrabaen" target="_blank">Twitter</a>
+        </p>
+        <p>
+            <a href="https://github.com/severrabaen" target="_blank">GitHub</a>
+        </p>
+    </details>
+
+    <details>
+        <summary>何でこんなものがあるのか(無駄に長文です)</summary>
+        <p>
+            完全に持論ですが、競技プログラミングにおいて、それまでに解いた問題数というものはとても重要な物です。しかし、それと同じ程にどれだけの期間でどれだけの問題数を解いたかという事も重要であると考えています。当然、短期間で多くの問題を解く方が良いことは明白です。
+        </p>
+        <p>
+            自分がある期間中にどれだけの問題数を解けたかということはAtCoder Problems等のサービスにより知ることが可能です。しかし、他ユーザーと比べようとした時、従来までは簡単に比べる方法が存在しませんでした。このサービスはユーザー名を入力するだけでそれを簡単に可視化できます。
+        </p>
+    </details>
+
+    <details>
+        <summary>使い方</summary>
+        <p>
+            上方にある入力欄にAtCoderIDを入力してください。スペース区切りで複数人指定可能です。入力してしばらくすると、グラフが出てくるはずです(色々な処理をしているので時間がかかるかもです)。
+        </p>
+    </details>
+    <details>
+        <summary>注意事項</summary>
+        <p>
+            あまりにも対象のAC数が少ないと縦軸が小数点になります。
+        </p>
+        <p>
+            複数人でグラフを生成する時、AC数の差が凄かったりするとグラフが凄いことになります。ユーザーごとの色は6色しかないため、7人以上で比較すると必ず色が同じ人が出てきます。ご了承を。
+        </p>
+    </details>
+</body>
+</html>
