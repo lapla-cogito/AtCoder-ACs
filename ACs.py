@@ -4,12 +4,15 @@ import matplotlib.pyplot as plt
 import numpy as np
 import json
 import urllib.request
+import seaborn as sns
+import tweepy
+import oauth2
+import webbrowser as web
 import time
 import datetime
 from datetime import datetime
 from datetime import timedelta
-import seaborn as sns
-import tweepy
+from twython import Twython, TwythonError
 from bs4 import BeautifulSoup
 from flask import Flask,request,render_template
 from requests_oauthlib import OAuth1Session
@@ -34,16 +37,8 @@ prevACtime=0
 highest=0
 tod = datetime.date(datetime.today())
 
-#取得後に追記
-CK = "Consumer Key を入力"
-CS = "Consumer Secret を入力"
 
-def oauth():
-        auth=tweepy.OAuthHandler(CK,CS)
-        redir=auth.get_authorization_url()
-        return redir
-        
-def tweet():
+def tweetsen():
         senten='AtCoder AC count battle!\n'
         for i in range(Usercount):
             senten+=Userfortw[i]
@@ -51,6 +46,31 @@ def tweet():
                senten+=' vs.'
         senten+='\n#ACbattle'
         return senten
+      
+def tweet():
+  CK=""
+  CS=""
+  AT=""
+  AS=""
+  medurl="https://upload.twitter.com/1.1/media/upload.json"
+  urltex = "https://api.twitter.com/1.1/statuses/update.json"
+  twitter=OAuthSession(CK,CS,AT,AS)
+  graprhim={"media":open('graph.png','rb')}
+  posmed=twitter.post(medurl,files=files)
+  
+  #アップロードに失敗
+  if req_media.status_code!=200:
+    print("画像アップロード失敗!%s",req_media.text)
+    exit()
+  
+  medid=json.loads(req_media.text)['media_id']
+  param={'status':'AC battle',"media_ids":[media_id]}
+  req_media=twitter.post(urltex,params=params)
+  #アップロードに失敗
+  if req_media.status_code!=200:
+    print("テキストアップデート失敗!%s",req_media.text)
+    exit()
+  print("tweeted")
         
 #入力されたユーザーが存在するかどうか
 def existID(s):
@@ -131,6 +151,7 @@ for i in range(len(Users)):
             ac.append(ACs)
             day+=timedelta(1)
           
+        #tips:7人以上の入力で色がループする
         plt.plot(time, ac, label=Users[0])
         Userfortw.append(Users[0])
         del Users[0]
@@ -140,7 +161,6 @@ plt.xlabel("Date")
 plt.ylabel("AC counts")
 plt.ylim(0, highest*1.1)
 plt.xticks(rotation=315)
-print(tweet())
 plt.legend()
 plt.savefig('graph.png')
 #全ての工程が終了
