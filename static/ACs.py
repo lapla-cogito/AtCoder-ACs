@@ -11,6 +11,7 @@ import webbrowser as web
 import cgi
 import time
 import datetime
+import browser
 from datetime import datetime
 from datetime import timedelta
 from twython import Twython, TwythonError
@@ -22,23 +23,23 @@ from browser import document
 
 def ACs():
   
-  # ƒ†[ƒU[‚Ì“ü—Í
+  # ãƒ¦ãƒ¼ã‚¶ãƒ¼ã®å…¥åŠ›
   #Users = input().split()
   Users=float(document["inputusers"].value)
   Usercount=0
-  #ƒcƒC[ƒg—p‚Ìƒ†[ƒU[‚ğ“ü‚ê‚é
+  #ãƒ„ã‚¤ãƒ¼ãƒˆç”¨ã®ãƒ¦ãƒ¼ã‚¶ãƒ¼ã‚’å…¥ã‚Œã‚‹
   Userfortw=[]
-  #ƒcƒC[ƒg‚Å‚«‚éƒ^ƒCƒ~ƒ“ƒO‚©‚Ç‚¤‚©(ƒOƒ‰ƒt‚Ì¶¬‚ªI‚í‚Á‚Ä‚¢‚ê‚ÎTrue)
+  #ãƒ„ã‚¤ãƒ¼ãƒˆã§ãã‚‹ã‚¿ã‚¤ãƒŸãƒ³ã‚°ã‹ã©ã†ã‹(ã‚°ãƒ©ãƒ•ã®ç”ŸæˆãŒçµ‚ã‚ã£ã¦ã„ã‚Œã°True)
   readyTotw=False
 
-  #ƒOƒ‰ƒt‚ÌŠî‘bİ’è
+  #ã‚°ãƒ©ãƒ•ã®åŸºç¤è¨­å®š
   plt.style.use('default')
   sns.set()
   sns.set_style('whitegrid')
 
-  #1ŒÂ‘O‚ÌAC‚µ‚½“ú
+  #1å€‹å‰ã®ACã—ãŸæ—¥
   prevACtime=0
-  #“ü—Í‚³‚ê‚½’†‚Å1”Ô‰ğ‚¢‚Ä‚él‚Ì–â‘è”
+  #å…¥åŠ›ã•ã‚ŒãŸä¸­ã§1ç•ªè§£ã„ã¦ã‚‹äººã®å•é¡Œæ•°
   highest=0
   tod = datetime.date(datetime.today())
 
@@ -63,21 +64,21 @@ def ACs():
     graprhim={"media":open('graph.png','rb')}
     posmed=twitter.post(medurl,files=files)
   
-  #ƒAƒbƒvƒ[ƒh‚É¸”s
+  #ã‚¢ãƒƒãƒ—ãƒ­ãƒ¼ãƒ‰ã«å¤±æ•—
     if req_media.status_code!=200:
-      print("‰æ‘œƒAƒbƒvƒ[ƒh¸”s!%s",req_media.text)
+      print("ç”»åƒã‚¢ãƒƒãƒ—ãƒ­ãƒ¼ãƒ‰å¤±æ•—!%s",req_media.text)
       exit()
   
     medid=json.loads(req_media.text)['media_id']
     param={'status':'AC battle',"media_ids":[media_id]}
     req_media=twitter.post(urltex,params=params)
-  #ƒAƒbƒvƒ[ƒh‚É¸”s
+  #ã‚¢ãƒƒãƒ—ãƒ­ãƒ¼ãƒ‰ã«å¤±æ•—
     if req_media.status_code!=200:
-      print("ƒeƒLƒXƒgƒAƒbƒvƒf[ƒg¸”s!%s",req_media.text)
+      print("ãƒ†ã‚­ã‚¹ãƒˆã‚¢ãƒƒãƒ—ãƒ‡ãƒ¼ãƒˆå¤±æ•—!%s",req_media.text)
       exit()
     print("tweeted")
         
-#“ü—Í‚³‚ê‚½ƒ†[ƒU[‚ª‘¶İ‚·‚é‚©‚Ç‚¤‚©
+#å…¥åŠ›ã•ã‚ŒãŸãƒ¦ãƒ¼ã‚¶ãƒ¼ãŒå­˜åœ¨ã™ã‚‹ã‹ã©ã†ã‹
   def existID(s):
           try:
               ACurl = urllib.request.urlopen("https://beta.atcoder.jp/users/" + s)
@@ -86,13 +87,13 @@ def ACs():
               return False
 
   for i in range(len(Users)):    
-          #AC‚µ‚½ŠÔ‚ğ“ü‚ê‚Ä‚¢‚­
+          #ACã—ãŸæ™‚é–“ã‚’å…¥ã‚Œã¦ã„ã
           time=[]
-          #AC‚µ‚½”‚ğ“ü‚ê‚Ä‚¢‚­
+          #ACã—ãŸæ•°ã‚’å…¥ã‚Œã¦ã„ã
           ac=[]
-          #AC‚µ‚½–â‘è‚ÌƒRƒ“ƒeƒXƒg–¼
+          #ACã—ãŸå•é¡Œã®ã‚³ãƒ³ãƒ†ã‚¹ãƒˆå
           contests=[]
-          #AC‚µ‚½–â‘è–¼‚ğ“ü‚ê‚Ä‚¢‚­
+          #ACã—ãŸå•é¡Œåã‚’å…¥ã‚Œã¦ã„ã
           problems=[]
           #AC count for each user
           ACs=0
@@ -105,18 +106,18 @@ def ACs():
           Usercount+=1
           #previous
           prevTime = str(jsonData[0]["epoch_second"])
-          #ƒ[ƒJƒ‹ƒ^ƒCƒ€‚É•ÏŠ·
+          #ãƒ­ãƒ¼ã‚«ãƒ«ã‚¿ã‚¤ãƒ ã«å¤‰æ›
           prevTime = datetime.fromtimestamp(int(prevTime))
     
           for j in range(len(jsonData)):
               l = int(j)
               breakFlag=False
               subData = jsonData[l]
-              #ƒ\[ƒg‚µ‚Ä‚ ‚é‚Ì‚ÅAC‚¶‚á‚È‚¢ƒXƒe[ƒ^ƒX‚ªo‚Ä‚«‚½‚ç‚»‚êˆÈ~‚ÍAC‚Í–³‚¢
+              #ã‚½ãƒ¼ãƒˆã—ã¦ã‚ã‚‹ã®ã§ACã˜ã‚ƒãªã„ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹ãŒå‡ºã¦ããŸã‚‰ãã‚Œä»¥é™ã¯ACã¯ç„¡ã„
               if subData["result"] != "AC":
                   break
              
-              #d•¡AC‚Ì”rœ
+              #é‡è¤‡ACã®æ’é™¤
               for k in range(len(problems)):
                   m=int(k)
                   if subData["contest_id"]==contests[m] and subData["problem_id"]==problems[m]:
@@ -126,13 +127,13 @@ def ACs():
               if breakFlag:
                   continue             
               else:
-                  #AC‚ğo‚µ‚½ŠÔ(UNIXŠÔ)
+                  #ACã‚’å‡ºã—ãŸæ™‚é–“(UNIXæ™‚é–“)
                   ACTime=subData["epoch_second"]
                 
                   if l==0:
                       mon=ACTime
                 
-                   #ƒ[ƒJƒ‹ƒ^ƒCƒ€‚É•ÏŠ·
+                   #ãƒ­ãƒ¼ã‚«ãƒ«ã‚¿ã‚¤ãƒ ã«å¤‰æ›
                   fixedTime = datetime.fromtimestamp(ACTime)
                 
                   if l==0:
@@ -148,7 +149,7 @@ def ACs():
           if ACs>highest:
               highest=ACs
 
-          #ÅIAC‚©‚çŒ»İ‚Ì“ú‚Ü‚Åü‚ğˆø‚­
+          #æœ€çµ‚ACã‹ã‚‰ç¾åœ¨ã®æ—¥ã¾ã§ç·šã‚’å¼•ã
           if prevTime.day!=tod.day and prevTime.month!=tod.month and prevTime.year!=tod.year:
             day=datetime.date(prevTime)
             while day<=tod:
@@ -156,7 +157,7 @@ def ACs():
               ac.append(ACs)
               day+=timedelta(1)
           
-          #tips:7lˆÈã‚Ì“ü—Í‚ÅF‚ªƒ‹[ƒv‚·‚é
+          #tips:7äººä»¥ä¸Šã®å…¥åŠ›ã§è‰²ãŒãƒ«ãƒ¼ãƒ—ã™ã‚‹
           plt.plot(time, ac, label=Users[0])
           Userfortw.append(Users[0])
           del Users[0]
@@ -169,12 +170,12 @@ def ACs():
   #plt.legend()
   res=document["result"]
   
-  #ˆ³“|“IƒfƒoƒbƒO—p(Brython‚ª‚«‚¿‚ñ‚Æ“®‚­‚©)
+  #åœ§å€’çš„ãƒ‡ãƒãƒƒã‚°ç”¨(BrythonãŒãã¡ã‚“ã¨å‹•ãã‹)
   res.text=tweet()
   plt.savefig('graph.png')
-  #‘S‚Ä‚ÌH’ö‚ªI—¹
+  #å…¨ã¦ã®å·¥ç¨‹ãŒçµ‚äº†
   readyTotw=True
 
- #HTML‘¤‚Åsend‚³‚ê‚½‚çÀs
+ #HTMLå´ã§sendã•ã‚ŒãŸã‚‰å®Ÿè¡Œ
 runbu=document["run"]
 runbu.bind("click",ACs)
