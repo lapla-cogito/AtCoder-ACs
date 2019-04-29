@@ -24,6 +24,7 @@ Usercount=0
 plt.style.use('default')
 sns.set()
 sns.set_style('whitegrid')
+
 #1個前のACした日
 prevACtime=0
 #入力された中で1番解いてる人の問題数
