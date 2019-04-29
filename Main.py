@@ -20,10 +20,6 @@ from urllib.parse import parse_qsl
 # ユーザーの入力
 Users = input().split()
 Usercount=0
-#ツイート用のユーザーを入れる
-Userfortw=[]
-#ツイートできるタイミングかどうか(グラフの生成が終わっていればTrue)
-readyTotw=False
 #グラフの基礎設定
 plt.style.use('default')
 sns.set()
@@ -33,20 +29,6 @@ prevACtime=0
 #入力された中で1番解いてる人の問題数
 highest=0
 tod = datetime.date(datetime.today())
-  
-  #アップロードに失敗
-  if req_media.status_code!=200:
-    print("画像アップロード失敗!%s",req_media.text)
-    exit()
-  
-  medid=json.loads(req_media.text)['media_id']
-  param={'status':'AC battle',"media_ids":[media_id]}
-  req_media=twitter.post(urltex,params=params)
-  #アップロードに失敗
-  if req_media.status_code!=200:
-    print("テキストアップデート失敗!%s",req_media.text)
-    exit()
-  print("tweeted")
         
 #入力されたユーザーが存在するかどうか
 def existID(s):
@@ -55,6 +37,7 @@ def existID(s):
             return True
         except:
             return False
+          
 for i in range(len(Users)):    
         #ACした時間を入れていく
         time=[]
@@ -126,7 +109,6 @@ for i in range(len(Users)):
           
         #tips:7人以上の入力で色がループする
         plt.plot(time, ac, label=Users[0])
-        Userfortw.append(Users[0])
         del Users[0]
   
 # Graph
