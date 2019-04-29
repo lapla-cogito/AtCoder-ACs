@@ -99,7 +99,7 @@ for i in range(len(Users)):
                 for ra in range(len(contestData)):
                   ranu=int(ra)
                   data=contestData[ranu]
-                  if data["id"]==subData["contest_id"] and data["rate_change"]!="-":
+                  if data["id"]==subData["contest_id"] and data["rate_change"]!="-" and not (data["rate_change"]=="All" and data["id"][0:3]!="agc"):
                     rate=True
                     break
                     
