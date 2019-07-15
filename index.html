@@ -92,9 +92,7 @@
 
     <script>
 
-        //グローバル変数
-        var problems = [];
-        var ACtime = [];
+
 
         //結果と時間をキーとしたソート(こうしておくことでACの提出が前から順番に並んでくれる)
         const order = [
@@ -114,19 +112,19 @@
         }
 
         //jsonファイルからデータを持ってくる
-        function getData(user) {
+        /*function getData(user) {
             var xhr = new XMLHttpRequest();
-            var ur = "https://kenkoooo.com/atcoder/atcoder-api/results?user=" + user;
+            var ur = "https://kenkoooo.com/atcoder/atcoder-api/results?user=" + separated[0];
             //ACした問題名を管理するset型
             var s = new Set();
             var siz = 0;
             xhr.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
-                    console.log("ok!");
+                    //console.log("ok!");
                     var data = JSON.parse(xhr.responseText);
-                    console.log(data);
+                    //console.log(data);
                     data.sort(keysort(order));
-                    console.log(data);
+                    //console.log(data);
 
                     //データがソートされたので順番に見て行く
                     for (var i = 0; i < data.length; ++i) {
@@ -136,8 +134,9 @@
                         if (siz == s.size) { continue; }
                         //重複ACでない場合
                         else {
-                            problems.push(siz);
-                            ACtime.push(data[i].epoch_second);
+                            siz = s.size;
+                            pproblems.push(siz);
+                            AACtime.push(data[i].epoch_second);
                         }
                     }
                 }
@@ -147,7 +146,7 @@
             }
             xhr.open('GET', ur);
             xhr.send();
-        }
+        }*/
 
 
         function funct() {
@@ -159,31 +158,85 @@
             var outputChart = new Chart(drawg, {
                 type: 'line',
                 data: {
-                    labels: ['Accepted'],
+                    labels: [],
                     datasets: [{
-
+                        label: [],
+                        data: []
                     }]
                 }
             });
 
+            var pproblems = [], AACtime = [];
+
             //↓length、C++とかの要領でlength()にしたらエラー吐かれたのでキレた。絶対に許さない。
             while (separated.length != 0) {
+
                 //jsonファイルからデータ取得
-                getData(separated[0]);
+                var xhr = new XMLHttpRequest();
+                var ur = "https://kenkoooo.com/atcoder/atcoder-api/results?user=" + separated[0];
+                //ACした問題名を管理するset型
+                var s = new Set();
+                var siz = 0;
+                xhr.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        var parseddata = JSON.parse(xhr.responseText);
+                        parseddata.sort(keysort(order));
+
+                        //データがソートされたので順番に見て行く
+                        for (var i = 0; i < parseddata.length; ++i) {
+                            //ソートされているため、結果がACでない提出が出てきたらそれ以降にACの提出は存在しない
+                            if (parseddata[i].result != "AC") { break; }
+                            s.add(parseddata[i].problem_id);
+                            if (siz == s.size) { continue; }
+                            //重複ACでない場合
+                            else {
+                                siz = s.size;
+                                pproblems.push(siz);
+                                AACtime.push(parseddata[i].epoch_second);
+                            }
+                        }
+                        console.log(pproblems.length);
+                    }
+                    else {
+                        console.log("a!");
+                    }
+                }
+
+                xhr.open('GET', ur);
+                xhr.send();
+
+                console.log(AACtime);
                 //グラフにデータを追加
-                var newData = {
+                /*var newData = {
                     label: separated[0],
                     data: [],
                 }
-
                 outputChart.data.datasets.push(newData);
-                for (var i = 0; i < problems.length; ++i) {
+                for (var i = 0; i < pproblems.length; ++i) {
                     //newData.data.push(problems[i]);
-                    outputChart.data.datasets.forEach((dataset) =>{
-                        dataset.data.push(problems);
+                    outputChart.data.datasets.forEach((dataset) => {
+                        dataset.data.push(pproblems);
                     });
-                    outputChart.data.labels.push(ACs[i]);
+                    outputChart.data.labels.push(AACtime[i]);
+                }*/
+
+                var newData = {
+                    labels: [],
+                    datasets: [{
+                        label: [],
+                        data: []
+                    }]
                 }
+
+                outputChart.data.datasets.forEach((dataset) => {
+                    newData.datasets.data.push(pproblems);
+                });
+                outputChart.data.datasets.forEach((dataset) => {
+                    newData.labels.push(AACtime);
+                });
+                newData.datasets.label.push(separated[0]);
+                outputChart.data.datasets.push(newData);
+                //outputChart.data.datasets.label.push(separated[0]);
                 outputChart.update();
                 //先頭ユーザーを削除
                 separated.shift();
