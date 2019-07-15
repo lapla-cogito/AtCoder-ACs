@@ -92,11 +92,61 @@
 
     <script>
 
+        //グローバル変数
+        var problems = [];
+        var ACtime = [];
+
+        //結果と時間をキーとしたソート(こうしておくことでACの提出が前から順番に並んでくれる)
+        const order = [
+            { key: "result", reverse: false },
+            { key: "epoch_second", reverse: false }
+        ];
+
+        function keysort(list) {
+            return (a, b) => {
+                for (var i = 0; i < list.length; ++i) {
+                    const ord = list[i].reverse ? 1 : -1;
+                    if (a[list[i].key] < b[list[i].key]) { return ord; }
+                    if (a[list[i].key] > b[list[i].key]) { return -1 * ord; }
+                }
+                return 0;
+            };
+        }
+
         //jsonファイルからデータを持ってくる
         function getData(user) {
-            var problems = [];
+            var xhr = new XMLHttpRequest();
+            var ur = "https://kenkoooo.com/atcoder/atcoder-api/results?user=" + user;
+            //ACした問題名を管理するset型
+            var s = new Set();
+            var siz = 0;
+            xhr.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    console.log("ok!");
+                    var data = JSON.parse(xhr.responseText);
+                    console.log(data);
+                    data.sort(keysort(order));
+                    console.log(data);
 
-
+                    //データがソートされたので順番に見て行く
+                    for (var i = 0; i < data.length; ++i) {
+                        //ソートされているため、結果がACでない提出が出てきたらそれ以降にACの提出は存在しない
+                        if (data[i].result != "AC") { break; }
+                        s.add(data[i].id);
+                        if (siz == s.size) { continue; }
+                        //重複ACでない場合
+                        else {
+                            problems.push(siz);
+                            ACtime.push(data[i].epoch_second);
+                        }
+                    }
+                }
+                else {
+                    console.log("a!");
+                }
+            }
+            xhr.open('GET', ur);
+            xhr.send();
         }
 
 
@@ -116,23 +166,28 @@
                 }
             });
 
-            //↓length、C++とかの要領でlength()にしたらエラー吐かれたのでキレた
+            //↓length、C++とかの要領でlength()にしたらエラー吐かれたのでキレた。絶対に許さない。
             while (separated.length != 0) {
+                //jsonファイルからデータ取得
+                getData(separated[0]);
                 //グラフにデータを追加
                 var newData = {
                     label: separated[0],
                     data: [],
                 }
 
-                //jsonファイルからデータ取得
-                getData(separated[0]);
-
                 outputChart.data.datasets.push(newData);
+                for (var i = 0; i < problems.length; ++i) {
+                    //newData.data.push(problems[i]);
+                    outputChart.data.datasets.forEach((dataset) =>{
+                        dataset.data.push(problems);
+                    });
+                    outputChart.data.labels.push(ACs[i]);
+                }
+                outputChart.update();
                 //先頭ユーザーを削除
                 separated.shift();
             }
-
-            outputChart.update();
         }
 
 
@@ -147,12 +202,9 @@
             else {
                 //送信ボタン無効化
                 $("#sub").prop("disabled", true);
-                $(".ef:focus ~ label, .inp.ef ~ label").css("top", "4px");
+                $(".ef:focus ~ label, .inp.ef ~ label").css("top", "-16px");
             }
         }
-        /*$(document).ready(function () {
-            $(".inselec").select2();
-        });*/
 
     </script>
 
@@ -162,12 +214,13 @@
 
     <div class="inp">
         <input id="id_text" class="ef" type="text" placeholder="" onKeyUp="chec(value);" name="content">
-        <label>severrabaen tourist</label>
+        <label>AtCoder ID(separeted by spaces)</label>
         <span class="focus_line"></span>
     </div>
 
     <input id="sub" type="button" value="Run" onclick="funct();" />
     <br />
+
     <!--グラフ描画領域-->
     <canvas id="gr"></canvas>
 </body>
