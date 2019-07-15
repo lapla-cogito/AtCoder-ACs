@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="utf-8">
+    <title>AtCoder ACs</title>
+
+    <!--jQuery-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+    <!--chart,js-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <style>
+        .inp {
+            position: relative;
+            width: 80%;
+            margin: 40px 3%;
+        }
+
+            .inp input[type='text'] {
+                font: 15px/24px sans-serif;
+                box-sizing: border-box;
+                width: 100%;
+                letter-spacing: 1px;
+                padding-left: 4em;
+            }
+
+                .inp input[type='text']:focus {
+                    outline: none;
+                }
+
+        .ef {
+            padding: 4px 0;
+            border: 0;
+            border-bottom: 1px solid #1b2538;
+            background-color: transparent;
+        }
+
+            .ef ~ .focus_line {
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 0;
+                height: 2px;
+                transition: 0.4s;
+                background-color: #da3c41;
+            }
+
+            .ef:focus ~ .focus_line,
+            .inp.ef ~ .focus_line {
+                width: 100%;
+                transition: 0.4s;
+            }
+
+            .ef ~ label {
+                position: absolute;
+                z-index: -1;
+                top: 4px;
+                left: 0;
+                width: 100%;
+                transition: 0.3s;
+                letter-spacing: 0.5px;
+                color: #aaaaaa;
+            }
+
+            .ef:focus ~ label, .inp.ef ~ label {
+                font-size: 12px;
+                top: -16px;
+                transition: 0.3s;
+                color: #da3c41;
+            }
+
+        #sub {
+            display: inline-block;
+            padding: 0.3em 1em;
+            text-decoration: none;
+            color: #67c5ff;
+            border: solid 2px #67c5ff;
+            border-radius: 3px;
+            transition: .4s;
+        }
+
+            #sub:hover {
+                background: #67c5ff;
+                color: white;
+            }
+    </style>
+
+
+
+    <script>
+
+        //jsonファイルからデータを持ってくる
+        function getData(user) {
+            var problems = [];
+
+
+        }
+
+
+        function funct() {
+
+            var username = id_text.value;
+            var separated = username.split(" ");
+
+            var drawg = document.getElementById("gr").getContext("2d");
+            var outputChart = new Chart(drawg, {
+                type: 'line',
+                data: {
+                    labels: ['Accepted'],
+                    datasets: [{
+
+                    }]
+                }
+            });
+
+            //↓length、C++とかの要領でlength()にしたらエラー吐かれたのでキレた
+            while (separated.length != 0) {
+                //グラフにデータを追加
+                var newData = {
+                    label: separated[0],
+                    data: [],
+                }
+
+                //jsonファイルからデータ取得
+                getData(separated[0]);
+
+                outputChart.data.datasets.push(newData);
+                //先頭ユーザーを削除
+                separated.shift();
+            }
+
+            outputChart.update();
+        }
+
+
+        //textareaに文字が入力されているか
+        function chec(text) {
+            if (text.length >= 1) {
+                //送信ボタン有効化
+                $("#sub").prop("disabled", false);
+                //placefolder的な文字列を固定
+                $(".ef:focus ~ label, .inp.ef ~ label").css("top", "-16px");
+            }
+            else {
+                //送信ボタン無効化
+                $("#sub").prop("disabled", true);
+                $(".ef:focus ~ label, .inp.ef ~ label").css("top", "4px");
+            }
+        }
+        /*$(document).ready(function () {
+            $(".inselec").select2();
+        });*/
+
+    </script>
+
+</head>
+
+<body>
+
+    <div class="inp">
+        <input id="id_text" class="ef" type="text" placeholder="" onKeyUp="chec(value);" name="content">
+        <label>severrabaen tourist</label>
+        <span class="focus_line"></span>
+    </div>
+
+    <input id="sub" type="button" value="Run" onclick="funct();" />
+    <br />
+    <!--グラフ描画領域-->
+    <canvas id="gr"></canvas>
+</body>
+</html>
